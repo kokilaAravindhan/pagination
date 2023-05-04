@@ -46,25 +46,28 @@ request.onload=function(){
 
   var colP=document.createElement("div");
   colP.setAttribute("class","col");
+  
+
+    
 
   var pagination=document.createElement("nav");
   pagination.setAttribute("class","pagination-container");
   pagination.style.alignItems="center"
   
 /** */
-  var current_page = 0;
+window.addEventListener('load', () => {
+  console.log("hello");
+  changePage(1);
+
+
+});
+  var current_page = 1;
   const paginationLimit = 10;
   
 
   var pageBtnPrev=document.createElement("button");
   pageBtnPrev.setAttribute("class","pagination-button");
   pageBtnPrev.id="prev-btn";
-  pageBtnPrev.onclick=function (){
-    if (current_page > 1) {
-      //current_page--;
-      changePage(current_page);
-  }
-  }
   pageBtnPrev.innerHTML="Previous";
   pageBtnPrev.style.border="none";
   pageBtnPrev.style.cursor="pointer";
@@ -72,33 +75,55 @@ request.onload=function(){
   pageBtnPrev.style.borderRadius=".2rem";
   pageBtnPrev.style.height="3 rem";
   pageBtnPrev.style.width="3 rem";
+ 
 
-  var pageNum=document.createElement("div");
-  pageNum.style.backgroundColor="transparent";
-  pageNum.style.border="none";
-  pageNum.style.cursor="pointer";
-  pageNum.style.margin=".75rem .75rem";
-  pageNum.style.borderRadius=".2rem";
-  pageNum.style.height="3 rem";
-  pageNum.style.width="3 rem";
-  pageNum.id="pageNum";
 
   var pageBtnNext=document.createElement("button");
   pageBtnNext.setAttribute("class","pagination-button");
   pageBtnNext.id="nxt-btn";
   pageBtnNext.innerHTML="Next";
-  pageBtnNext.onclick=function(){
-    if (current_page < numPages()) {
-      //current_page++;
-      changePage(current_page);
-  }
-  }
   pageBtnNext.style.border="none";
   pageBtnNext.style.cursor="pointer";
   pageBtnNext.style.margin=".75rem .75rem";
   pageBtnNext.style.borderRadius=".2rem";
   pageBtnNext.style.height="3 rem";
   pageBtnNext.style.width="3 rem";
+  pagination.append(pageBtnPrev,pageBtnNext);
+ 
+    pageBtnPrev.addEventListener("click", () => {
+      if (current_page > 1) {
+        //current_page--;
+        changePage(current_page-1);
+      }
+    });
+    pageBtnNext.addEventListener("click", () => {
+      if (current_page < numPages()) {
+      //current_page++;
+      changePage(current_page+1);
+      }    
+  });
+  for(var i=1;i<paginationLimit;i++){
+    var pageNumBtn=document.createElement("button");
+    pageNumBtn.setAttribute("class","pagination-button")
+    pageNumBtn.style.backgroundColor="grey";
+    pageNumBtn.style.border="none";
+    pageNumBtn.style.cursor="pointer";
+    pageNumBtn.style.margin=".75rem .75rem";
+    pageNumBtn.style.borderRadius=".2rem";
+    pageNumBtn.style.height="3 rem";
+    pageNumBtn.style.width="3 rem";
+    pageNumBtn.id="pageNumBtn";
+    pageNumBtn.innerHTML=i;
+    pageNumBtn.addEventListener("click", () => {
+      for(var j=1;j<paginationLimit;j++){
+      //current_page++;
+        changePage(j);
+        j++;
+        console.log(j);
+      } 
+    });   
+    pagination.append(pageNumBtn);
+  } 
 
   var row2=document.createElement("div");
   row2.setAttribute("class","row");
@@ -123,21 +148,16 @@ request.onload=function(){
   var p3=document.createElement("p");
   p3.id="p3";
   //p3.innerHTML=result[i].email;
-  /*const paginationNum = document.getElementById("pageNum");
-  for(var i=0;i<=paginationLimit;i++){
-    pageNum.innerHTML = i;
-  }*/
+  
   p1.innerHTML = "";
   p2.innerHTML = "";
   p3.innerHtml = "";
 
-    
-function changePage(page)
-{   
- 
-  
-  const nextButton = document.getElementById("pageBtnNext");
-  const prevButton = document.getElementById("pageBtnPrev");
+  function changePage(page)
+  {   
+
+    const nextButton = document.getElementById("pageBtnNext");
+    const prevButton = document.getElementById("pageBtnPrev");
     var p1 = document.getElementById("p1");
     var p2 = document.getElementById("p2");
     var p3 = document.getElementById("p3");
@@ -146,18 +166,15 @@ function changePage(page)
     if (page < 1) page = 1;
     if (page > numPages()) page = numPages();
 
-   
-    
-   
-       for (var i = (page-1) * paginationLimit; i < (page * paginationLimit); i++) 
-        {
+       for (var i = (page-1) * paginationLimit; i <= (page * paginationLimit); i++) 
+        {   
+          //paginationNum.innerHTML = i;
+            console.log(i);
             p1.innerHTML += result[i].id+ "<br>";
             p2.innerHTML += result[i].name+ "<br>";
-            p3.innerHTML += result[i].email+ "<br>";
-            
+            p3.innerHTML += result[i].email+ "<br>";           
         }
     
-     
     if (page == 0) {
       prevButton.style.visibility = "hidden";
     } else {
@@ -173,14 +190,15 @@ function changePage(page)
 
 function numPages()
 {
+ 
   return pageCount = Math.ceil(result.length / paginationLimit);
+    
+  
 }
 
-window.onload = function() {
-    changePage(0);
-};
 
-  pagination.append(pageBtnPrev,pageBtnNext,pageNum);
+
+ 
   colP.append(pagination);
   rowP.append(colP);
   Hcol3.append(Hh3);
